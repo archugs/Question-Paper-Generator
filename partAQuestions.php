@@ -9,7 +9,7 @@
 			include_once "inc/class.questPapers.inc.php";
 			$questPaper = new QuestionPapers($db);
 			if($questPaper->createQuestion() == TRUE) {
-				header("Location: ViewPaper.php");
+				header("Location: partBQuestions.php");
 			//	echo "<div class='message good'>Question Paper successfully created.</div>";
 				exit;
 			}
@@ -80,11 +80,6 @@
 				});
 				$(".txtBoxesDiv").append(label).append(inputBox).append("<br/><br/>").append(selectBox).append("<br/><br/>");
  
-			var getSubCode = function() {
-				var param = {};
-				param = window.location.search.split("=");
-				return param[1];
-			}
 			$('#Q'+i).typeahead({
 				name: 'Q'+i,
 				remote: {

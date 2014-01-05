@@ -29,6 +29,41 @@ class QuestionPapers
 		}
 	}
 	
+	/** Retrieves the total number of questions in PART-A or PART-B.
+	 * @param string $category - PART-A or PART-B category
+	 * @return - number of PART-A/PART-B questions in the question paper OR FALSE otherwise.		
+  	*/
+	public function getTotalQuestions($category)
+	{
+		if($category == "A")
+		{
+			$sql = "SELECT COUNT(*) AS Count
+				FROM questions a
+				INNER JOIN questPapers_questions b
+				ON a.questionid = b.questionid
+				WHERE a.marks = 2
+				AND b.questPaperNo = :questPaperNo";
+		}
+		else
+		{
+			$sql = "SELECT COUNT(DISTINCT (SUBSTR(a.questionNo, 1, 1))) AS Count
+				FROM questions a
+				INNER JOIN questPapers_questions b
+				ON a.questionid = b.questionid
+				WHERE a.marks <> 2
+				AND b.questPaperNo = :questPaperNo";
+		}
+		if($stmt = $this->_db->prepare($sql))
+		{
+			$stmt->bindParam(":questPaperNo", $_SESSION['questPaperNo'], PDO::PARAM_INT);
+			$stmt->execute();
+			$row = $stmt->fetch();
+			$stmt->closeCursor();
+			return $row['Count'];
+		}
+
+		return FALSE;
+	}
 
 	/** 
 	 * Adds a new question paper to the database.
@@ -62,49 +97,112 @@ class QuestionPapers
 	 */
 	public function createQuestion()
 	{
-		if($_POST['category'] == "A") {
-			$marks = 2;
-		}
-		else {
-			$marks = $_POST['marks'];
-		}
-
+	
 		$sql = "INSERT INTO questions(questionNo, subjectcode, questionText, unit, marks) VALUES(:questNo, :subcode, :text, :unit, :marks)";
 
-		for($count = 1; $count <= 10; $count ++)
-		{
-			if(empty($_POST['Q'.$count]))
-				break;
-			else
+		if($_POST['category'] == "A") {
+			$marks = 2;
+
+			for($count = 1; $count <= 10; $count ++)
 			{
-				if($stmt = $this->_db->prepare($sql)) 
+				if(empty($_POST['Q'.$count]))
+					break;
+				else
 				{
-					$stmt->bindParam(":questNo", $count, PDO::PARAM_STR);
-					$stmt->bindParam(":subcode", $_POST['subcode'], PDO::PARAM_STR);
-					$stmt->bindParam(":text", $_POST['Q'.$count], PDO::PARAM_STR);
-					$stmt->bindParam(":unit", $_POST['unit'.$count], PDO::PARAM_STR);
-					$stmt->bindParam(":marks", $marks, PDO::PARAM_STR);
-					$stmt->execute();
-					$questionid = $this->_db->lastInsertId();
-					$stmt->closeCursor();
-					$sql2 = "INSERT INTO questPapers_questions(questpaperno, questionid) VALUES(:questPaperId, :questionId)";
-					if($stmt2 = $this->_db->prepare($sql2))
+					if($stmt = $this->_db->prepare($sql)) 
 					{
-						$stmt2->bindParam(":questPaperId", $_SESSION['questPaperNo'], PDO::PARAM_INT);
-						$stmt2->bindParam(":questionId", $questionid, PDO::PARAM_INT);
-						$stmt2->execute();
-						$stmt2->closeCursor();
+						$stmt->bindParam(":questNo", $count, PDO::PARAM_STR);
+						$stmt->bindParam(":subcode", $_POST['subcode'], PDO::PARAM_STR);
+						$stmt->bindParam(":text", $_POST['Q'.$count], PDO::PARAM_STR);
+						$stmt->bindParam(":unit", $_POST['unit'.$count], PDO::PARAM_STR);
+						$stmt->bindParam(":marks", $marks, PDO::PARAM_STR);
+						$stmt->execute();
+						$questionid = $this->_db->lastInsertId();
+						$stmt->closeCursor();
+						$sql2 = "INSERT INTO questPapers_questions(questpaperno, questionid) VALUES(:questPaperId, :questionId)";
+						if($stmt2 = $this->_db->prepare($sql2))
+						{
+							$stmt2->bindParam(":questPaperId", $_SESSION['questPaperNo'], PDO::PARAM_INT);
+							$stmt2->bindParam(":questionId", $questionid, PDO::PARAM_INT);
+							$stmt2->execute();
+							$stmt2->closeCursor();
+						}
+						else 
+						{
+							return FALSE;
+						}
 					}
 					else 
 					{
 						return FALSE;
 					}
 				}
-				else 
+			}
+		}
+		else {
+			$numPartA = $this->getTotalQuestions("A");
+			for($i = $numPartA + 1; $i <= ($numPartA + 5); $i ++)
+			{
+				if(empty($_POST['Q'.$i.'a']) && empty($_POST['Q'.$i.'a1']))
+					break;
+				else
 				{
-					return FALSE;
+					$choice = 'a';
+					for($j = 0; $j < 2; $j ++)
+					{ 
+						if(empty($_POST['Q'.$i.$choice]))
+						{
+							$count = 2;
+							$subdiv = '1';
+							$marks = 8;
+						}
+						else
+						{
+							$count = 1;
+							$subdiv = '';
+							$marks = 16;
+						}
+						for($k = 1; $k <= $count; $k ++)
+						{
+							if(empty($_POST['Q'.$i.$choice.$subdiv]))
+								break;
+							$questNo = $i.$choice.$subdiv;
+							if($stmt = $this->_db->prepare($sql)) 
+							{
+								$stmt->bindParam(":questNo", $questNo, PDO::PARAM_STR);
+								$stmt->bindParam(":subcode", $_POST['subcode'], PDO::PARAM_STR);
+								$stmt->bindParam(":text", $_POST['Q'.$questNo], PDO::PARAM_STR);
+								$stmt->bindParam(":unit", $_POST['unit'.$questNo], PDO::PARAM_STR);
+								$stmt->bindParam(":marks", $marks, PDO::PARAM_INT);
+								$stmt->execute();
+								$questionid = $this->_db->lastInsertId();
+								$stmt->closeCursor();
+								$sql2 = "INSERT INTO questPapers_questions(questpaperno, questionid) VALUES(:questPaperId, :questionId)";
+								if($stmt2 = $this->_db->prepare($sql2))
+								{
+									$stmt2->bindParam(":questPaperId", $_SESSION['questPaperNo'], PDO::PARAM_INT);
+									$stmt2->bindParam(":questionId", $questionid, PDO::PARAM_INT);
+									$stmt2->execute();
+									$stmt2->closeCursor();
+								}
+								else 
+								{
+									return FALSE;
+								}
+							}
+							else 
+							{
+								return FALSE;
+							}
+								
+							$subdiv = '2';
+						}
+						
+						$choice = 'b';
+					}
 				}
 			}
+
 		}
 		return TRUE;
 	}
@@ -132,6 +230,7 @@ class QuestionPapers
 				
 	/**
 	 * Retrieves the data for viewing the questions.
+	 * @param string $category - PART-A or PART-B category
 	 * @return an array of row values or FALSE otherwise.
 	 */
 	public function viewQuestions($category)
@@ -143,7 +242,8 @@ class QuestionPapers
 				INNER JOIN questPapers_questions b
 				ON a.questionid = b.questionid
 				WHERE a.marks = 2
-				AND b.questPaperNo = :questPaperNo";
+				AND b.questPaperNo = :questPaperNo
+				ORDER BY CAST(a.questionNo AS UNSIGNED)";
 		}
 		else 
 		{
@@ -152,7 +252,8 @@ class QuestionPapers
 				INNER JOIN questPapers_questions b
 				ON a.questionid = b.questionid
 				WHERE a.marks <> 2
-				AND b.questPaperNo = :questPaperNo";
+				AND b.questPaperNo = :questPaperNo
+				ORDER BY a.questionNo";
 		}
 		if($stmt = $this->_db->prepare($sql))
 		{
@@ -165,8 +266,8 @@ class QuestionPapers
 
 		return FALSE;
 	}
-			
-	
+
+		
 }	
 ?>
 

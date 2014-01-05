@@ -69,7 +69,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 			if(($questPaperNo = ($questPapers->createQuestionPaper())) != FALSE) {
 				$_SESSION['questPaperNo'] = $questPaperNo;
 				$_SESSION['subcode'] = $_POST['subcode'];
-				header("Location: PartAQuestions.php");
+				header("Location: partAQuestions.php");
 				exit;
 			}
 			else {
@@ -88,7 +88,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 	<h2> Create New Question Paper </h2>
 	<br />
 	<div id="main">
-	<form method="POST" action="CreateQP.php" name="createQPform" id="createQPform">
+	<form method="POST" action="createQP.php" name="createQPform" id="createQPform">
 	<div>
 		<label for="examname">Examination Name</label>	
 		<input type="text" name="examname" id="examname" value="<?php echo htmlspecialchars($examname);?>" />

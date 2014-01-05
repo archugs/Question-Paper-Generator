@@ -16,6 +16,9 @@ body { font: 14px/1.1 Helvetica, Sans-Serif;  }
 #page-wrap { width: 960px; margin: 6px auto 50px; position: relative; }
 hr { height: 1px; background: #ccc; clear: both; margin: 20px 0; none; display: block; }
 span.tab { padding: 0 30px; }
+.leftalign {text-align: left; width: 1000px; }
+.rightalign {text-align: right; width: 1000px; }
+.centeralign {text-align: center; width: 1000px; }
 
 /*
 	TYPOGRAPHY
@@ -39,8 +42,8 @@ p { margin: 0 0 6px 0; }
 /*
     FORM STUFF
 */
-label { display: inline-block; width: 20px;  text-align: right; font-weight: bold; color: #3D5266; } 
-input, select { margin-left: 60px;  }     
+label { display: inline-block; width: 25px;  text-align: right; font-weight: bold; color: #3D5266; } 
+input, select { margin-left: 60px;  }    
 
 /*
     MESSAGING
