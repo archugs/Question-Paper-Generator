@@ -54,8 +54,34 @@
 <?php
 	foreach($resultPartB as $row) 
 	{
-		echo $row['questionNo'].".	".$row['questionText'];
+		if(preg_match('/b$/', $row['questionNo']) || preg_match('/b1$/', $row['questionNo']))
+		{
+			for($i = 0; $i <= 50; $i ++)
+			{
+				echo "&nbsp;";
+			}
+			echo "(OR)<br/>";
+		}
+		if(preg_match('/2$/', $row['questionNo']))
+		{
+			echo '&nbsp;&nbsp;&nbsp;&nbsp;(ii).'." ".$row['questionText'];
+		}
+		else if(preg_match('/1$/', $row['questionNo']))
+		{
+			preg_match('/a|b/', $row['questionNo'], $matches, PREG_OFFSET_CAPTURE);
+			echo substr($row['questionNo'], 0, $matches[0][1]).".(".substr($row['questionNo'], $matches[0][1], 1).")"."<br/>"."&nbsp;&nbsp;&nbsp;&nbsp;(i)".$row['questionText'];
+		}
+		else
+		{
+			preg_match('/a|b/', $row['questionNo'], $matches, PREG_OFFSET_CAPTURE);
+			echo substr($row['questionNo'], 0, $matches[0][1]).".(".substr($row['questionNo'], $matches[0][1], 1).")"." ".$row['questionText'];
+		}
 		echo "<br/>";
+		if(preg_match('/b$/', $row['questionNo']) || preg_match('/b2$/', $row['questionNo']))
+		{
+			echo "<br/>";
+		}
+
 	}
 			$output = ob_get_clean();
 			echo $output;
