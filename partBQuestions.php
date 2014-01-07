@@ -115,40 +115,36 @@
 				var addDivBButton = getAddDivButton('#collapse' + i + 'b', 'collapse' + i + 'b');
 				$(".txtBoxesDiv").append(getLabel('Q'+i+'a', 'Q.'+i+'.a', '18px')).append(getInputBox('Q'+i+'a')).append(addDivAButton).append("<br/><br/>").append(getSelectBox('unit'+i+'a')).append("<br/><br/>").append(subDivA);
 				$(".txtBoxesDiv").append(getLabel('Q'+i+'b', 'Q.'+i+'.b', '18px')).append(getInputBox('Q'+i+'b')).append(addDivBButton).append("<br/><br/>").append(getSelectBox('unit'+i+'b')).append("<br/><br/>").append(subDivB);
- 
-			$('#Q'+i).typeahead({
-				name: 'Q'+i,
-				remote: {
-				url: "questionsFinder.php?query=%QUERY",
-				beforeSend: function(jqXhr, settings) {
-					settings.url = settings.url + "&subcode=<?php echo $_SESSION['subcode'] ?>";
-				}}
-			}); 
-			$('#Q'+i+'a1').typeahead({
-				name: 'Q'+i+'a1',
-				remote: {
-				url: "questionsFinder.php?query=%QUERY",
-				beforeSend: function(jqXhr, settings) {
-					settings.url = settings.url + "&subcode=<?php echo $_SESSION['subcode'] ?>";
-				}}
-			}); 
-			$('#Q'+i+'a2').typeahead({
-				name: 'Q'+i+'a2',
-				remote: {
-				url: "questionsFinder.php?query=%QUERY",
-				beforeSend: function(jqXhr, settings) {
-					settings.url = settings.url + "&subcode=<?php echo $_SESSION['subcode'] ?>";
-				}}
-			}); 
-		 	}	
+			
+			function autocompleteTxtBox(boxName) {
+				$('#'+boxName).typeahead({
+					name: boxName,
+					remote: {
+					url: "questionsFinder.php?query=%QUERY",
+					beforeSend: function(jqXhr, settings) {
+						settings.url = settings.url + "&subcode=<?php echo $_SESSION['subcode'] ?>";
+					}}
+				}); 
+			}
+ 			autocompleteTxtBox('Q'+i+'a');
+			autocompleteTxtBox('Q'+i+'a1');
+			autocompleteTxtBox('Q'+i+'a2');
+			autocompleteTxtBox('Q'+i+'b');
+			autocompleteTxtBox('Q'+i+'b1');
+			autocompleteTxtBox('Q'+i+'b2'); 
+			}	
 			$("[class^=collapse]").on('click', {counter: i}, function(e) {
 				var collapse_content = $(this).attr('href');
 				$(collapse_content).toggle('slow');
 				if($(this).prev().attr("disabled")) {
+					var txtName = $(this).prev().attr("name");
 					$(this).prev().removeAttr("disabled");
+					autocompleteTxtBox(txtName);
 					$(this).next().next().next().removeAttr("disabled");
-				}
-				else {
+				} 
+				else { 
+				
+					$(this).prev().children().next().typeahead("destroy");
 					$(this).prev().attr("disabled", true);
 					$(this).next().next().next().attr("disabled", true);
 				}
