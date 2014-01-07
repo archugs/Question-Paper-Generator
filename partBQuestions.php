@@ -37,6 +37,10 @@
 	    margin-left: 30px;
 	}  
 
+	.sub-hint {
+	    margin-left: 40px;
+	}
+
 	.tt-dropdown-menu {
 	  width: 400px;
 	  margin-top: 5px;
@@ -131,7 +135,10 @@
 			autocompleteTxtBox('Q'+i+'a2');
 			autocompleteTxtBox('Q'+i+'b');
 			autocompleteTxtBox('Q'+i+'b1');
-			autocompleteTxtBox('Q'+i+'b2'); 
+			autocompleteTxtBox('Q'+i+'b2');
+			//alert($('#collapse3a').children().children('.tt-hint').attr("disabled")); 
+			$('#collapse' + i + 'a').children().children('.tt-hint').addClass('sub-hint'); 
+			$('#collapse' + i + 'b').children().children('.tt-hint').addClass('sub-hint'); 
 			}	
 			$("[class^=collapse]").on('click', {counter: i}, function(e) {
 				var collapse_content = $(this).attr('href');
@@ -143,7 +150,6 @@
 					$(this).next().next().next().removeAttr("disabled");
 				} 
 				else { 
-				
 					$(this).prev().children().next().typeahead("destroy");
 					$(this).prev().attr("disabled", true);
 					$(this).next().next().next().attr("disabled", true);
