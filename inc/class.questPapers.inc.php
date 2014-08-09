@@ -267,7 +267,29 @@ class QuestionPapers
 		return FALSE;
 	}
 
-		
+	/**
+	 * Retrieves all the question papers for the user.
+	 * @return an array of row values or FALSE otherwise.
+	 */
+	public function getQuestionPapers()
+	{
+		$sql = "SELECT examName, department, subjectcode, 
+				subject, semester, totalmarks, date
+				FROM questPapers
+				WHERE userid = :userid";
+
+		if($stmt = $this->_db->prepare($sql))
+		{
+			$stmt->bindParam(":userid", $_SESSION['UserID'], PDO::PARAM_INT);
+			$stmt->execute();
+			$rows = $stmt->fetchAll();
+			$stmt->closeCursor();
+			return $rows;
+		}
+
+		return FALSE;
+	}
+	
 }	
 ?>
 
