@@ -48,7 +48,7 @@
 		</p>
 	</fieldset>
 	<fieldset id="actions">
-			<input type="submit" name="login" id="login" value="Log in" />
+			<input type="submit" name="login" id="login" value="Log in" class="button" />
 			<a href="">Forgot password?</a><a href="">New user?</a>
 	</fieldset>
 	</form><br /><br />

@@ -9,6 +9,14 @@ include_once "common/header.php";
 <div>
 <?php
 if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
+?>
+	<form method="GET" action="createQP.php" id="create-qp-form">
+		<p class="actions">
+			<input type="submit" id="create-qp" value="Create New" class="button" />
+			<i class="fa fa-plus fa-lg"></i>
+		</p>
+	</form>
+<?php
 	include_once "inc/class.questPapers.inc.php";
 	$questPaper = new QuestionPapers($db);
 	if(($result = $questPaper->getQuestionPapers()) != FALSE):
@@ -16,13 +24,12 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 <table>
 	<thead>
 	<tr>
+		<th>Date</th>
+		<th>Semester</th>
 		<th>Exam Name</th>
-		<th>Department</th>
 		<th>Subject code</th>
 		<th>Subject</th>
-		<th>Semester</th>
 		<th>Total Marks</th>
-		<th>Date</th>
 	</tr>
 	</thead>
 	<tbody>
@@ -40,13 +47,12 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 	foreach($result as $row)
 	{
 		echo "<tr>";
+		echo "<td>".date("d-m-Y", strtotime($row['date']))."</td>";
+		echo "<td>".$semesters[$row['semester']]."</td>";
 		echo "<td>".$row['examName']."</td>";
-		echo "<td>".$row['department']."</td>";
 		echo "<td>".$row['subjectcode']."</td>";
 		echo "<td>".$row['subject']."</td>";
-		echo "<td>".$semesters[$row['semester']]."</td>";
 		echo "<td>".$row['totalmarks']."</td>";
-		echo "<td>".date("d-m-Y", strtotime($row['date']))."</td>";
 		echo "<tr/>";
 	}
 ?>
