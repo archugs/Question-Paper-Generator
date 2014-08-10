@@ -9,7 +9,7 @@
 		$questPaper = new QuestionPapers($db);
 		if($_SERVER['REQUEST_METHOD'] == 'POST'):
 			if($questPaper->createQuestion() == TRUE) {
-				header("Location: viewPaper.php");
+				header("Location: viewPaper.php?qp_no=".$_SESSION['questPaperNo']);
 				//echo "<div class='message good'>Question Paper successfully created.</div>";
 				exit;
 			}

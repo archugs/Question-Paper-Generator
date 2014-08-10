@@ -47,7 +47,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 	foreach($result as $row)
 	{
 		echo "<tr>";
-		echo "<td>".date("d-m-Y", strtotime($row['date']))."</td>";
+		echo "<td><a href='viewPaper.php?qp_no=".$row['questPaperNo']."'>".date("d-m-Y", strtotime($row['date']))."</a></td>";
 		echo "<td>".$semesters[$row['semester']]."</td>";
 		echo "<td>".$row['examName']."</td>";
 		echo "<td>".$row['subjectcode']."</td>";

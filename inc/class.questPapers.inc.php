@@ -33,7 +33,7 @@ class QuestionPapers
 	 * @param string $category - PART-A or PART-B category
 	 * @return - number of PART-A/PART-B questions in the question paper OR FALSE otherwise.		
   	*/
-	public function getTotalQuestions($category)
+	public function getTotalQuestions($questPaperNo, $category)
 	{
 		if($category == "A")
 		{
@@ -55,7 +55,7 @@ class QuestionPapers
 		}
 		if($stmt = $this->_db->prepare($sql))
 		{
-			$stmt->bindParam(":questPaperNo", $_SESSION['questPaperNo'], PDO::PARAM_INT);
+			$stmt->bindParam(":questPaperNo", $questPaperNo, PDO::PARAM_INT);
 			$stmt->execute();
 			$row = $stmt->fetch();
 			$stmt->closeCursor();
@@ -211,14 +211,14 @@ class QuestionPapers
 	 * Retrieves the data for viewing the question paper. 
 	 * @return row array of values or FALSE otherwise.
 	 */
-	 public function viewQuestionPaper()
+	 public function viewQuestionPaper($questPaperNo)
 	 {
 		$sql = "SELECT examName, department, subjectcode, subject, semester, totalmarks, date
 			FROM questPapers
 			WHERE questPaperNo = :id";
 		if($stmt = $this->_db->prepare($sql))
 		{
-			$stmt->bindParam(":id", $_SESSION['questPaperNo'], PDO::PARAM_INT);
+			$stmt->bindParam(":id", $questPaperNo, PDO::PARAM_INT);
 			$stmt->execute();
 			$row = $stmt->fetch();
 			$stmt->closeCursor();
@@ -233,7 +233,7 @@ class QuestionPapers
 	 * @param string $category - PART-A or PART-B category
 	 * @return an array of row values or FALSE otherwise.
 	 */
-	public function viewQuestions($category)
+	public function viewQuestions($questPaperNo, $category)
 	{
 		if($category == "A")
 		{
@@ -257,7 +257,7 @@ class QuestionPapers
 		}
 		if($stmt = $this->_db->prepare($sql))
 		{
-			$stmt->bindParam(":questPaperNo", $_SESSION['questPaperNo'], PDO::PARAM_INT);
+			$stmt->bindParam(":questPaperNo", $questPaperNo, PDO::PARAM_INT);
 			$stmt->execute();
 			$rows = $stmt->fetchAll();
 			$stmt->closeCursor();
@@ -273,7 +273,7 @@ class QuestionPapers
 	 */
 	public function getQuestionPapers()
 	{
-		$sql = "SELECT examName, department, subjectcode, 
+		$sql = "SELECT questPaperNo, examName, department, subjectcode, 
 				subject, semester, totalmarks, date
 				FROM questPapers
 				WHERE userid = :userid";

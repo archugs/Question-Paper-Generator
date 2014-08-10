@@ -6,9 +6,9 @@
 	if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 		include_once "inc/class.questPapers.inc.php";
 		$questPaper = new QuestionPapers($db);
-		if(($resultQP = ($questPaper->viewQuestionPaper())) != FALSE):
-			if((($resultPartA = ($questPaper->viewQuestions("A"))) != FALSE) && (($resultPartB = ($questPaper->viewQuestions("B"))) != FALSE)):
-				$totalPartB = $questPaper->getTotalQuestions("B");
+		if(($resultQP = ($questPaper->viewQuestionPaper($_GET['qp_no']))) != FALSE):
+			if((($resultPartA = ($questPaper->viewQuestions($_GET['qp_no'], "A"))) != FALSE) && (($resultPartB = ($questPaper->viewQuestions($_GET['qp_no'], "B"))) != FALSE)):
+				$totalPartB = $questPaper->getTotalQuestions($_GET['qp_no'], "B");
 				ob_start();
 ?>
 	<style>
