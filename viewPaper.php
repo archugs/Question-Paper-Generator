@@ -14,6 +14,7 @@
 	<style>
 	@page { margin: 2cm 2cm 2cm 2cm; } 
 	</style>
+	<div id="qp-content">
 	<div align="center">
 	<h2>B.E / B.Tech DEGREE EXAMINATIONS</h2>
 	<h2><?php echo $resultQP['semester'] ?>th SEMESTER - <?php echo $resultQP['department'] ?></h2>
@@ -38,7 +39,7 @@
 <?php
 	foreach($resultPartA as $row)
 	{
-		echo $row['questionNo'].".	".$row['questionText'];
+		echo "<p>".$row['questionNo'].".	".$row['questionText']."</p>";
 		echo "<br/>";
 	}
 ?>
@@ -56,25 +57,26 @@
 	{
 		if(preg_match('/b$/', $row['questionNo']) || preg_match('/b1$/', $row['questionNo']))
 		{
+			echo "<p>";
 			for($i = 0; $i <= 50; $i ++)
 			{
 				echo "&nbsp;";
 			}
-			echo "(OR)<br/>";
+			echo "(OR)</p><br/>";
 		}
 		if(preg_match('/2$/', $row['questionNo']))
 		{
-			echo '&nbsp;&nbsp;&nbsp;&nbsp;(ii).'." ".$row['questionText'];
+			echo '<p>&nbsp;&nbsp;&nbsp;&nbsp;(ii).'." ".$row['questionText'].'</p>';
 		}
 		else if(preg_match('/1$/', $row['questionNo']))
 		{
 			preg_match('/a|b/', $row['questionNo'], $matches, PREG_OFFSET_CAPTURE);
-			echo substr($row['questionNo'], 0, $matches[0][1]).".(".substr($row['questionNo'], $matches[0][1], 1).")"."<br/>"."&nbsp;&nbsp;&nbsp;&nbsp;(i)".$row['questionText'];
+			echo "<p>".substr($row['questionNo'], 0, $matches[0][1]).".(".substr($row['questionNo'], $matches[0][1], 1).")"."<br/>"."&nbsp;&nbsp;&nbsp;&nbsp;(i)".$row['questionText']."</p>";
 		}
 		else
 		{
 			preg_match('/a|b/', $row['questionNo'], $matches, PREG_OFFSET_CAPTURE);
-			echo substr($row['questionNo'], 0, $matches[0][1]).".(".substr($row['questionNo'], $matches[0][1], 1).")"." ".$row['questionText'];
+			echo "<p>".substr($row['questionNo'], 0, $matches[0][1]).".(".substr($row['questionNo'], $matches[0][1], 1).")"." ".$row['questionText']."</p>";
 		}
 		echo "<br/>";
 		if(preg_match('/b$/', $row['questionNo']) || preg_match('/b2$/', $row['questionNo']))
@@ -88,6 +90,7 @@
 ?>
 	<br/><br/>
 	</div>
+	</div>
 	<script>
 		function submitForm(action)
 		{
@@ -97,11 +100,10 @@
 	</script>
 	<form name="generateForm" id="generateForm" method="post">
 	<input type="hidden" name="htmloutput" id="htmloutput" value="<?php echo htmlentities($output, ENT_QUOTES); ?>" />
-	<input type="button" class="button" style="width: 120px;" value="Generate DOC" onclick="submitForm('generateDoc.php')" />
-	<input type="button" class="button" style="width: 120px;" value="Generate PDF" onclick="submitForm('generatePDF.php')" />
+	<input type="button" class="button" value="Generate DOC" onclick="submitForm('generateDoc.php')" />
+	<input type="button" class="button" value="Generate PDF" onclick="submitForm('generatePDF.php')" />
 	</form>
-
-<?php
+	<?php
 			else:
 				echo "<div class='error'>Error. Please try again.</div>";
 			endif;

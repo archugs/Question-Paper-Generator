@@ -21,7 +21,7 @@ if(isset($_SESSION['LoggedIn']) && isset($_SESSION['UserID'])):
 	$questPaper = new QuestionPapers($db);
 	if(($result = $questPaper->getQuestionPapers()) != FALSE):
 ?>
-<table>
+<table class="table">
 	<thead>
 	<tr>
 		<th>Date</th>
